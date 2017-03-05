@@ -1,0 +1,121 @@
+object MainForm: TMainForm
+  Left = 396
+  Top = 197
+  BorderStyle = bsDialog
+  Caption = 'MurBtn'
+  ClientHeight = 562
+  ClientWidth = 784
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poDesktopCenter
+  OnCreate = FormCreate
+  OnKeyPress = FormKeyPress
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnlStateIndicator: TPanel
+    Left = 0
+    Top = 0
+    Width = 665
+    Height = 562
+    Align = alLeft
+    BevelOuter = bvNone
+    Color = clWhite
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -32
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 0
+    OnMouseDown = pnlStateIndicatorMouseDown
+  end
+  object pnlControls: TPanel
+    Left = 616
+    Top = 0
+    Width = 168
+    Height = 562
+    Align = alRight
+    BevelInner = bvSpace
+    BevelOuter = bvNone
+    BorderWidth = 1
+    TabOrder = 1
+    object pnlStats: TPanel
+      Left = 2
+      Top = 2
+      Width = 164
+      Height = 87
+      Align = alTop
+      BevelOuter = bvNone
+      BorderWidth = 15
+      TabOrder = 2
+      object grdStats: TStringGrid
+        Left = 15
+        Top = 15
+        Width = 134
+        Height = 57
+        TabStop = False
+        Align = alClient
+        BorderStyle = bsNone
+        Color = clBtnFace
+        ColCount = 2
+        Enabled = False
+        FixedCols = 0
+        RowCount = 2
+        FixedRows = 0
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        GridLineWidth = 0
+        Options = [goVertLine, goHorzLine]
+        ParentFont = False
+        ScrollBars = ssNone
+        TabOrder = 0
+        OnDrawCell = grdStatsDrawCell
+      end
+    end
+    object lstHistory: TListBox
+      Left = 22
+      Top = 80
+      Width = 75
+      Height = 425
+      Enabled = False
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ItemHeight = 13
+      ParentFont = False
+      TabOrder = 0
+    end
+    object btnReset: TButton
+      Left = 22
+      Top = 512
+      Width = 75
+      Height = 25
+      Caption = 'Reset'
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 1
+      TabStop = False
+      OnClick = btnResetClick
+    end
+  end
+  object tmrCountdown: TTimer
+    Enabled = False
+    OnTimer = tmrCountdownTimer
+    Left = 8
+    Top = 8
+  end
+end
