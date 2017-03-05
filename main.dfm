@@ -13,7 +13,7 @@ object MainForm: TMainForm
   Font.Style = []
   OldCreateOrder = False
   Position = poDesktopCenter
-  OnCreate = FormCreate
+  OnActivate = FormActivate
   OnKeyPress = FormKeyPress
   PixelsPerInch = 96
   TextHeight = 13

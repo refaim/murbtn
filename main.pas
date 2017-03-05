@@ -18,7 +18,6 @@ type
     pnlControls: TPanel;
     grdStats: TStringGrid;
     pnlStats: TPanel;
-    procedure FormCreate(Sender: TObject);
     procedure tmrCountdownTimer(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure btnResetClick(Sender: TObject);
@@ -26,6 +25,7 @@ type
     procedure pnlStateIndicatorMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure grdStatsDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
+    procedure FormActivate(Sender: TObject);
   private
     procedure RenderStats();
     procedure ResetForm();
@@ -226,14 +226,15 @@ begin
   ResetForm();
 end;
 
-procedure TMainForm.FormCreate(Sender: TObject);
-//var
-//  formRectangle: TRect;
+procedure TMainForm.FormActivate(Sender: TObject);
+var
+  formRectangle: TRect;
 begin
   ResetForm();
-  // TODO
-  // GetWindowRect(MainForm.Handle, formRectangle);
-  // SetCursorPos(formRectangle.Left, formRectangle.Top);
+  GetWindowRect(MainForm.Handle, formRectangle);
+  SetCursorPos(
+    formRectangle.Left + pnlStateIndicator.Left + Round(pnlStateIndicator.Width / 2),
+    formRectangle.Top + pnlStateIndicator.Top + Round(pnlStateIndicator.Height / 2));
 end;
 
 procedure TMainForm.MediaPlayerNotify(Sender: TObject);
