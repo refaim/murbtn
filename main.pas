@@ -6,7 +6,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, Math, DateUtils, StdCtrls, MPlayer, Grids;
+  Dialogs, ExtCtrls, Math, DateUtils, StdCtrls, MPlayer, Grids, MMSystem;
 
 type
   TButtonState = (bsIdle, bsWait, bsFire, bsSuccess, bsFalseStart);
@@ -21,12 +21,13 @@ type
     procedure tmrCountdownTimer(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure btnResetClick(Sender: TObject);
-    procedure MediaPlayerNotify(Sender: TObject);
     procedure pnlStateIndicatorMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure grdStatsDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure FormActivate(Sender: TObject);
   private
+    procedure StopCurrentSound();
+    procedure PlaySoundResource(ResourceId:String);
     procedure RenderStats();
     procedure ResetForm();
     procedure SetState(NewState:TButtonState);
@@ -41,6 +42,8 @@ const
   cStateMachine: array[TButtonState] of TButtonState = (bsWait, bsFalseStart, bsSuccess, bsIdle, bsIdle);
   cStateColors: array[TButtonState] of TColor = (clWhite, $008CE6F0, $00B48246, $00578B2E, $005C5CCD);
   cStateLabelColors: array[TButtonState] of TColor = (clBlack, clBlack, clWhite, clWhite, clWhite);
+  cStateSounds: array[TButtonState] of String = ('', '', 'snd_gong', '', 'snd_fstart');
+  cStateInterruptSound: array[TButtonState] of Boolean = (true, true, true, false, false);
 
 var
   MainForm: TMainForm;
@@ -110,6 +113,16 @@ begin
   if (Ms >= 1000) then Result := ':(';
 end;
 
+procedure TMainForm.StopCurrentSound();
+begin
+  PlaySound(nil, 0, 0);
+end;
+
+procedure TMainForm.PlaySoundResource(ResourceId:String);
+begin
+  PlaySound(PAnsiChar(ResourceId), HInstance, SND_RESOURCE or SND_ASYNC);
+end;
+
 function TMainForm.GetStateDescription():String;
 begin
   if (mButtonState = bsIdle) then Result := 'CLICK HERE (or press space)'
@@ -125,6 +138,8 @@ begin
   pnlStateIndicator.Color := cStateColors[mButtonState];
   pnlStateIndicator.Font.Color := cStateLabelColors[mButtonState];
   pnlStateIndicator.Caption := GetStateDescription();
+  if (cStateInterruptSound[mButtonState]) then StopCurrentSound();
+  if (cStateSounds[mButtonState] <> '') then PlaySoundResource(cStateSounds[mButtonState]);
 end;
 
 procedure TMainForm.RenderStats();
@@ -152,8 +167,6 @@ begin
 
   RenderStats();
   SetState(bsIdle);
-
-  // TODO stop media player
 end;
 
 procedure TMainForm.OnUserResponse();
@@ -210,12 +223,6 @@ begin
  if (mButtonState = bsWait) then
  begin
   SetState(bsFire);
-  {
-  MediaPlayer.Filename := 'gong.wav';
-  MediaPlayer.Open;
-  MediaPlayer.Play;
-  // TODO start reaction time only when gong is played
-  }
   mReactionTimeStart := MilliSecondOfTheDay(Now);
  end;
  tmrCountdown.Enabled := False;
@@ -236,24 +243,6 @@ begin
     formRectangle.Left + pnlStateIndicator.Left + Round(pnlStateIndicator.Width / 2),
     formRectangle.Top + pnlStateIndicator.Top + Round(pnlStateIndicator.Height / 2));
 end;
-
-procedure TMainForm.MediaPlayerNotify(Sender: TObject);
-begin
- // TODO
-end;
-
-  {
-  // TODO separate timer code from sound code, make sound dictionary
-  else if (_buttonState = BUTTON_STATE_FIRE)
-    then begin
-      // TODO play sound
-      // TODO do not allow success until sound is played
-    end
-  else if ((_buttonState = BUTTON_STATE_SUCC) or (_buttonState = BUTTON_STATE_FAIL))
-    then begin
-      // TODO play sound
-    end;        }
-
 
 procedure TMainForm.grdStatsDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
 var

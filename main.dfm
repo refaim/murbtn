@@ -1,5 +1,5 @@
 object MainForm: TMainForm
-  Left = 396
+  Left = 320
   Top = 197
   BorderStyle = bsDialog
   Caption = 'MurBtn'
