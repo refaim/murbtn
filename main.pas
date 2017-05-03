@@ -179,7 +179,7 @@ begin
   if (newState = bsWait) then
   begin
     // TODO exponential (?) distribution
-    tmrCountdown.Interval := SecToMsec(Max(1, Ceil(Random * 5)));
+    tmrCountdown.Interval := SecToMsec(Max(1, Ceil(Random * 3)));
     tmrCountdown.Enabled := True;
   end;
   if ((newState = bsSuccess) or (newState = bsFalseStart)) then
