@@ -44,7 +44,7 @@ const
   cStateColors: array[TButtonState] of TColor = (clWhite, $008CE6F0, $00B48246, $00578B2E, $005C5CCD);
   cStateLabelColors: array[TButtonState] of TColor = (clBlack, clBlack, clWhite, clWhite, clWhite);
   cStateSounds: array[TButtonState] of String = ('', '', 'snd_gong', '', 'snd_fstart');
-  cStateInterruptSound: array[TButtonState] of Boolean = (true, true, true, false, false);
+  cStateInterruptSound: array[TButtonState] of Boolean = (true, true, true, true, true);
 
 var
   MainForm: TMainForm;
