@@ -1,5 +1,6 @@
-*.~*
 *.dcu
 *.ddp
 *.exe
+*.ini
 *.res
+*.~*

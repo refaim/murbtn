@@ -6,7 +6,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, Math, DateUtils, StdCtrls, MPlayer, Grids, MMSystem;
+  Dialogs, ExtCtrls, Math, DateUtils, StdCtrls, MPlayer, Grids, MMSystem, IniFiles;
 
 type
   TButtonState = (bsIdle, bsWait, bsFire, bsSuccess, bsFalseStart);
@@ -25,6 +25,7 @@ type
     procedure grdStatsDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure FormActivate(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     procedure StopCurrentSound();
     procedure PlaySoundResource(ResourceId:String);
@@ -50,6 +51,8 @@ var
   mButtonState: TButtonState;
   mReactionTimeStart: LongWord;
   mReactionTimes: array of Integer;
+  mGongSecMin: Double;
+  mGongSecMax: Double;
 
 implementation
 
@@ -179,7 +182,7 @@ begin
   if (newState = bsWait) then
   begin
     // TODO exponential (?) distribution
-    tmrCountdown.Interval := SecToMsec(Max(1, Ceil(Random * 3)));
+    tmrCountdown.Interval := Round(SecToMsec(Max(mGongSecMin, Random * mGongSecMax)));
     tmrCountdown.Enabled := True;
   end;
   if ((newState = bsSuccess) or (newState = bsFalseStart)) then
@@ -251,6 +254,29 @@ begin
   Grid := Sender as TStringGrid;
   Grid.Canvas.FillRect(Rect);
   DrawText(Grid.Canvas.Handle, PAnsiChar(Grid.Cells[ACol, ARow]), Length(Grid.Cells[ACol, ARow]), Rect, DT_CENTER or DT_VCENTER or DT_SINGLELINE);
+end;
+
+procedure TMainForm.FormCreate(Sender: TObject);
+const
+  iniSection = 'Settings';
+  minSecDefault: Double = 1.1;
+  maxSecDefault: Double = 2.9;
+var
+  minSec, maxSec: Double;
+  Config: TIniFile;
+begin
+  Config := TIniFile.Create(StringReplace(Application.ExeName, '.exe', '.ini', []));
+  try
+    minSec := Config.ReadFloat(iniSection, 'GongSecMin', minSecDefault);
+    maxSec := Config.ReadFloat(iniSection, 'GongSecMax', maxSecDefault);
+    if (minSec = minSecDefault) then Config.WriteFloat(iniSection, 'GongSecMin', minSec);
+    if (maxSec = maxSecDefault) then Config.WriteFloat(iniSection, 'GongSecMax', maxSec);
+  finally
+    Config.Free();
+  end;
+
+  mGongSecMin := minSec;
+  mGongSecMax := maxSec;
 end;
 
 end.
