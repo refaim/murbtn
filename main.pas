@@ -80,7 +80,7 @@ end;
 
 function MedianValue(var Values: array of Integer):Integer;
 var
-  NumValues:Integer;
+  NumValues: Integer;
 begin
   NumValues := Length(Values);
   Result := 0;
@@ -92,22 +92,22 @@ begin
   end;
 end;
 
-function SecToMsec(Seconds:Integer):Integer;
+function SecToMsec(Seconds: Double): Double;
 begin
   Result := Seconds * 1000;
 end;
 
-function AddMsUnits(Ms:String):String;
+function AddMsUnits(Ms: String): String;
 begin
   Result := Ms + ' ms';
 end;
 
-function FormatTime(Ms:Integer):String;
+function FormatTime(Ms: Integer): String;
 begin
   Result := AddMsUnits(IntToStr(Ms));
 end;
 
-function FormatTimeShort(Ms:Integer):String;
+function FormatTimeShort(Ms: Integer):String;
 begin
   Result := AddMsUnits(IntToStr(Ms));
   if (Ms >= 1000) then Result := ':(';
@@ -118,12 +118,12 @@ begin
   PlaySound(nil, 0, 0);
 end;
 
-procedure TMainForm.PlaySoundResource(ResourceId:String);
+procedure TMainForm.PlaySoundResource(ResourceId: String);
 begin
   PlaySound(PAnsiChar(ResourceId), HInstance, SND_RESOURCE or SND_ASYNC);
 end;
 
-function TMainForm.GetStateDescription():String;
+function TMainForm.GetStateDescription(): String;
 begin
   if (mButtonState = bsIdle) then Result := 'CLICK HERE (or press space)'
   else if (mButtonState = bsWait) then Result := 'WAIT...'
@@ -132,7 +132,7 @@ begin
   else if (mButtonState = bsFalseStart) then Result := 'FALSE START';
 end;
 
-procedure TMainForm.SetState(NewState:TButtonState);
+procedure TMainForm.SetState(NewState: TButtonState);
 begin
   mButtonState := NewState;
   pnlStateIndicator.Color := cStateColors[mButtonState];
@@ -171,9 +171,9 @@ end;
 
 procedure TMainForm.OnUserResponse();
 var
-  newState:TButtonState;
-  reactionTimeMs:Integer;
-  latestTimeString:String;
+  newState: TButtonState;
+  reactionTimeMs: Integer;
+  latestTimeString: String;
 begin
   newState := cStateMachine[mButtonState];
   if (newState = bsWait) then
